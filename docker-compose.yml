@@ -1,0 +1,39 @@
+version: '3'
+
+services:    
+  app:        
+    build: .        
+    ports:            
+      - "3000:3000"        
+    volumes:            
+      - .:/app        
+    depends_on:            
+      - db    
+
+
+  db:        
+    image: postgres:14        
+    environment:            
+      POSTGRES_USER: user            
+      POSTGRES_PASSWORD: password            
+      POSTGRES_DB: brain_agriculture        
+    ports:            
+      - "5432:5432"        
+    volumes:            
+      - postgres_data:/var/lib/postgresql/data  
+
+  test:
+    build: .
+    command: ["npm", "test"]
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: test
+      DB_HOST: db
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: brain_agriculture
+            
+
+volumes:
+  postgres_data:
