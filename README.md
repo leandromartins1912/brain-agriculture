@@ -105,8 +105,3 @@ docker-compose down
 - `tests/` - Testes automatizados utilizando Jest.
 - `swagger/` - Arquivos relacionados à documentação da API com Swagger.
 
-Este projeto é licenciado sob a [MIT License](LICENSE).
-
----
-
-Este `README.md` cobre o essencial para iniciar e operar a API em um ambiente local, bem como oferece informações sobre como contribuir para o projeto.
