@@ -1,39 +1,57 @@
-version: '3'
+version: "3.8"
 
-services:    
-  app:        
-    build: .        
-    ports:            
-      - "3000:3000"        
-    volumes:            
-      - .:/app        
-    depends_on:            
-      - db    
+services:
+  # Serviço do banco de dados PostgreSQL
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: brain_agriculture
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
+  # Serviço da API (Node.js)
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: brain_agriculture
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
 
-  db:        
-    image: postgres:14        
-    environment:            
-      POSTGRES_USER: user            
-      POSTGRES_PASSWORD: password            
-      POSTGRES_DB: brain_agriculture        
-    ports:            
-      - "5432:5432"        
-    volumes:            
-      - postgres_data:/var/lib/postgresql/data  
+  # Serviço do Frontend (React com Nginx)
+  frontend:
+    build:
+      context: ./
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3001:80"
+    depends_on:
+      - api
 
+  # Serviço de testes da API
   test:
-    build: .
+    build: ./api
     command: ["npm", "test"]
     depends_on:
       - db
     environment:
       NODE_ENV: test
       DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: password
+      DB_USER: postgres
+      DB_PASSWORD: postgres
       DB_NAME: brain_agriculture
-            
 
+# Definição do volume fora do bloco services
 volumes:
-  postgres_data:
+  pgdata:
