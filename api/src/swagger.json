@@ -1,0 +1,355 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Agriculture API",
+    "version": "1.0.0",
+    "description": "API for managing farmers and their farms."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/farmers": {
+      "post": {
+        "tags": ["Farmer"],
+        "summary": "Create a new farmer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Farmer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Farmer created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Farmer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Farmer"],
+        "summary": "List all farmers",
+        "responses": {
+          "200": {
+            "description": "List of farmers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Farmer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/farmers/{id}": {
+      "get": {
+        "tags": ["Farmer"],
+        "summary": "Get a single farmer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Farmer found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Farmer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Farmer not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Farmer"],
+        "summary": "Update a farmer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Farmer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Farmer updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Farmer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Farmer not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Farmer"],
+        "summary": "Delete a farmer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Farmer deleted"
+          },
+          "404": {
+            "description": "Farmer not found"
+          }
+        }
+      }
+    },
+    "/dashboard/total-farms": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get total number of farms",
+        "responses": {
+          "200": {
+            "description": "Total number of farms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalFarms": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/total-area": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get total area of all farms",
+        "responses": {
+          "200": {
+            "description": "Total area of all farms in hectares",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalArea": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/farms-by-state": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get farms grouped by state",
+        "responses": {
+          "200": {
+            "description": "Farms count by state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/farms-by-crop": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get farms grouped by crop",
+        "responses": {
+          "200": {
+            "description": "Farms count by crop",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "crops": {
+                        "type": "string"
+                      },
+                      "count": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/land-use": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get land use statistics",
+        "responses": {
+          "200": {
+            "description": "Total agricultural and vegetation area",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalAgriculturalArea": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "totalVegetationArea": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Farmer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "document": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "farmName": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "totalArea": {
+            "type": "number",
+            "format": "float"
+          },
+          "agriculturalArea": {
+            "type": "number",
+            "format": "float"
+          },
+          "vegetationArea": {
+            "type": "number",
+            "format": "float"
+          },
+          "crops": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Soja", "Milho", "Algodão", "Café", "Cana de Açúcar"]
+            }
+          }
+        },
+        "required": [
+          "document",
+          "name",
+          "farmName",
+          "city",
+          "state",
+          "totalArea",
+          "agriculturalArea",
+          "vegetationArea",
+          "crops"
+        ]
+      }
+    }
+  }
+}
